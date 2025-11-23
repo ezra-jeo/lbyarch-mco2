@@ -11,8 +11,7 @@ echo === Linking ===
 gcc main.obj normalize.obj -o program.exe -m64
 if errorlevel 1 goto :error
 
-echo === Running program ===
-program.exe
+echo === Executable created successfully ===
 goto :end
 
 :error

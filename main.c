@@ -1,36 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-#define ROW 3
-#define COL 4
+#include "utility.c"
 
-extern double* imgCvtGrayIntToDouble(int row, int col, unsigned char *input);
+extern double* imgCvtGrayIntToDouble(int height, int width, unsigned char *input);
 
 int main(int argc, char *argv[]) { 
-    
-    unsigned char input[ROW * COL] = {
-        64,  89, 114,  84,
-        140, 166, 191, 84,
-        216, 242,  38, 84
-    };
+    int height, width;
+    int i, j; // Loop variables
+    unsigned char* input;
+    double* output;
 
+    // Input
+    scanf("%d %d", &height, &width);
+    input = getImg(height, width);
 
-    double* output = imgCvtGrayIntToDouble(ROW, COL, input);
-
+    output = imgCvtGrayIntToDouble(height, width, input);
 
     printf("\nInput: \n");
-    for (int i = 0; i < ROW; i++) {
-        for (int j = 0; j < COL; j++) {
-            printf("%hhu ", input[i * COL + j]);
+    printf("%d %d\n", height, width);
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            printf("%hhu ", input[i * width + j]);
             
         }
         printf("\n");
     }
 
     printf("\nOutput: \n"); 
-    for (int i = 0; i < ROW; i++) {
-        for (int j = 0; j < COL; j++) {
-            printf("%0.2lf ", output[i * COL + j]);  
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            printf("%0.2lf ", output[i * width + j]);  
         }
         printf("\n");
     }
