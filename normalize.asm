@@ -11,9 +11,11 @@ section .text
  default rel
 global imgCvtGrayIntToDouble
 imgCvtGrayIntToDouble:
+    ; Push non volatile registers
+    PUSH RSI 
+    PUSH RDI
     
     XOR RAX, RAX
-    
     MOV RAX, RCX ; Row  
     IMUL RDX ; Col
     
@@ -25,6 +27,9 @@ imgCvtGrayIntToDouble:
    
     LEA RAX, qword [output]
     
+    ; Restore values
+    POP RSI 
+    POP RDI
     RET
 
 cvtToSDNormalize:
