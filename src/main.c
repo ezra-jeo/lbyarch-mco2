@@ -1,39 +1,102 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <time.h>
 #include "./utils/utility.c"
 
+
 extern double* imgCvtGrayIntToDouble(int height, int width, unsigned char *input);
+
+double* imgCvtGrayIntToDouble_C(int height, int width, unsigned char *input) {
+    int i, j;
+    int size = height * width;
+    double* output = (double*) malloc(sizeof(double) * size);
+
+    for (i = 0; i < size; i++) {
+        output[i] = ((double) input[i]) / 255.0;
+    }
+
+    return output;
+
+}
+
+unsigned char* generateRandomImage(int height, int width) {
+    unsigned char* img = malloc(sizeof(unsigned char) * height * width);
+    for (int i = 0; i < height * width; i++) {
+        img[i] = rand() % 256;
+    }
+    return img;
+}
+
+void benchmark() {  //make this benchmark func
+    int sizes[3] = {10, 100, 1000};
+    int runs = 30;
+
+    printf("Benchmarking C vs Assembly implementation...\n");
+
+    for (int s = 0; s < 3; s++) {
+        int height = sizes[s];
+        int width = sizes[s];
+
+        unsigned char* input = generateRandomImage(height, width);
+        double totalC = 0.0, totalASM = 0.0;
+
+        // Benchmark C 
+        for (int r = 0; r < runs; r++) {
+            clock_t start = clock();
+            double* outC = imgCvtGrayIntToDouble_C(height, width, input);
+            clock_t end = clock();
+            totalC += (double)(end - start) / CLOCKS_PER_SEC;
+            free(outC);
+        }
+
+        // Benchmark ASM 
+        for (int r = 0; r < runs; r++) {
+            clock_t start = clock();
+            double* outASM = imgCvtGrayIntToDouble(height, width, input);
+            clock_t end = clock();
+            totalASM += (double)(end - start) / CLOCKS_PER_SEC;
+        }
+
+        printf("Image Size: %dx%d\n", height, width);
+        printf("  C implementation avg:   %f seconds\n", totalC / runs);
+        printf("  ASM implementation avg: %f seconds\n", totalASM / runs);
+        printf("----------------------------------------------------\n");
+
+        free(input);
+    }
+
+    printf("Benchmark complete.\n");
+}
 
 int main(int argc, char *argv[]) { 
     int height, width;
     int i, j; // Loop variables
-    unsigned char* input;
-    double* output;
+    unsigned char *input;
+    double *outputAsm, *outputC;
 
     // Input
     scanf("%d %d", &height, &width);
     input = getImg(height, width);
 
-    output = imgCvtGrayIntToDouble(height, width, input);
+    // Output
+    outputAsm = imgCvtGrayIntToDouble(height, width, input);
+    outputC = imgCvtGrayIntToDouble_C(height, width, input);
 
     printf("\nInput: \n");
     printf("%d %d\n", height, width);
-    for (i = 0; i < height; i++) {
-        for (j = 0; j < width; j++) {
-            printf("%hhu ", input[i * width + j]);
-            
-        }
-        printf("\n");
-    }
+    printImg(height, width, input, 0);
 
-    printf("\nOutput: \n"); 
-    for (i = 0; i < height; i++) {
-        for (j = 0; j < width; j++) {
-            printf("%0.2lf ", output[i * width + j]);  
-        }
-        printf("\n");
-    }
+
+    printf("\nOutput (Assembly): \n"); 
+    printImg(height, width, outputAsm, 1);
+
+    printf("\nOutput (C): \n"); 
+    printImg(height, width, outputC, 1);
+
+    // Benchmark    
+    printf("\n");
+    benchmark();
 
     return 0;
 }
