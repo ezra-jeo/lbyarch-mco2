@@ -4,7 +4,6 @@
 #include <time.h>
 #include "./utils/utility.c"
 
-
 extern double* imgCvtGrayIntToDouble(int height, int width, unsigned char *input);
 
 double* imgCvtGrayIntToDouble_C(int height, int width, unsigned char *input) {
@@ -13,11 +12,10 @@ double* imgCvtGrayIntToDouble_C(int height, int width, unsigned char *input) {
     double* output = (double*) malloc(sizeof(double) * size);
 
     for (i = 0; i < size; i++) {
-        output[i] = ((double) input[i]) / 255.0;
+        output[i] = (double) input[i] / 255.0;
     }
 
     return output;
-
 }
 
 unsigned char* generateRandomImage(int height, int width) {
@@ -28,7 +26,7 @@ unsigned char* generateRandomImage(int height, int width) {
     return img;
 }
 
-void benchmark() {  //make this benchmark func
+void benchmark() { 
     int sizes[3] = {10, 100, 1000};
     int runs = 30;
 
@@ -86,7 +84,6 @@ int main(int argc, char *argv[]) {
     printf("\nInput: \n");
     printf("%d %d\n", height, width);
     printImg(height, width, input, 0);
-
 
     printf("\nOutput (Assembly): \n"); 
     printImg(height, width, outputAsm, 1);
