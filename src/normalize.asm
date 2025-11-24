@@ -41,6 +41,8 @@ cvtToSDNormalize:
     
     cvtToSDLoop:
         ; Store to var convert to double float
+        
+        ; Loop condition
         CMP R10, qword [count]
         JE cvtToSDEnd
         
