@@ -1,5 +1,5 @@
 section .data
-PIXEL_SIZE dq 255.0
+MAX_PIXEL_VAL dq 255.0
 
 section .bss
 count resq 1
@@ -52,7 +52,7 @@ cvtToSDNormalize:
         CVTSI2SD XMM1, RAX
         
         ; Divide by 255
-        DIVSD XMM1, qword [PIXEL_SIZE]
+        DIVSD XMM1, qword [MAX_PIXEL_VAL]
         
         MOVSD qword [RDI + R10 * 8], XMM1
         
